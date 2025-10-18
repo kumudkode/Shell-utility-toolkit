@@ -1,14 +1,35 @@
-[2025-10-17 21:55:19] toolkit.sh: PASS
-[2025-10-17 21:55:20] backup.sh: PASS
-[2025-10-17 21:55:20] cleanup.sh: PASS
-[2025-10-17 21:55:20] cpu_monitor.sh: PASS
-[2025-10-17 21:55:21] disk_alert.sh: PASS
-[2025-10-17 21:55:21] disk_usage.sh: PASS
-[2025-10-17 21:55:21] log_analysis.sh: PASS
-[2025-10-17 21:55:22] log_monitor.sh: PASS
-[2025-10-17 21:55:22] memory_monitor.sh: PASS
-[2025-10-17 21:55:22] network_check.sh: PASS
-[2025-10-17 21:55:23] security_audit.sh: PASS
-[2025-10-17 21:55:23] service_check.sh: PASS
-[2025-10-17 21:55:23] system_info.sh: PASS
-[2025-10-17 21:55:26] user_monitor.sh: PASS
+------------------------------------
+
+[PASS] toolkit.sh
+
+[PASS] backup.sh
+
+[PASS] cleanup.sh
+
+[PASS] cpu_monitor.sh
+
+[PASS] disk_alert.sh
+
+[PASS] disk_usage.sh
+
+[PASS] log_analysis.sh
+
+[PASS] log_monitor.sh
+
+[PASS] memory_monitor.sh
+
+[PASS] network_check.sh
+
+[PASS] security_audit.sh
+
+[PASS] service_check.sh
+
+[PASS] system_info.sh
+
+[PASS] user_monitor.sh
+
+
+Test Summary:
+Total Scripts Tested: 14
+Passed: 14
+Failed: 0
