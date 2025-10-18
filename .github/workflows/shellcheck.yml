@@ -1,6 +1,5 @@
 name: Shell Toolkit CI/CD
 
-# Trigger on pushes and pull requests to main branch
 on:
   push:
     branches: [ main ]
@@ -10,35 +9,39 @@ on:
 jobs:
   lint_and_test:
     runs-on: ubuntu-latest
-
     steps:
       # 1. Checkout the repo
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Set up Bash environment (optional, default on Ubuntu)
-      - name: Setup Bash
-        run: echo "Bash is ready"
-
-      # 3. Install dependencies
+      # 2. Install dependencies
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
 
-      # 4. Lint all shell scripts
+      # 3. Lint all shell scripts
       - name: Lint Shell Scripts
         run: |
           echo "Running ShellCheck..."
           shellcheck $(find . -type f -name "*.sh")
 
-      # 5. Make scripts executable
+      # 4. Make scripts executable
       - name: Make scripts executable
         run: chmod +x toolkit.sh utils/*.sh tests/*.sh
 
-      # 6. Run automated tests
+      # 5. Run automated tests with failure detection
       - name: Run Shell Toolkit Tests
-        run: ./tests/test_toolkit.sh
+        run: |
+          echo "Running Shell Toolkit Tests..."
+          ./tests/test_toolkit.sh
+          STATUS=$?
+          if [ $STATUS -ne 0 ]; then
+            echo "::error ::Some scripts failed. See test_results.log for details."
+            exit 1
+          else
+            echo "All scripts passed successfully!"
+          fi
 
-      # 7. Upload test logs as artifacts (optional)
+      # 6. Upload test logs
       - name: Upload Test Logs
         if: always()
         uses: actions/upload-artifact@v3
