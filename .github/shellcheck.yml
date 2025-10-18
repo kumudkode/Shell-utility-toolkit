@@ -9,11 +9,22 @@ on:
 jobs:
   shellcheck:
     runs-on: ubuntu-latest
-
     steps:
+      # Step 1: Checkout repo
       - uses: actions/checkout@v4
-      - name: Install ShellCheck
-        run: sudo apt-get install -y shellcheck
-      - name: Run ShellCheck
-        run: shellcheck $(find . -type f -name "*.sh")
 
+      # Step 2: Install ShellCheck via official package
+      - name: Install ShellCheck
+        run: sudo snap install shellcheck --classic || sudo apt-get install -y shellcheck
+
+      # Step 3: Run ShellCheck on all .sh files
+      - name: Run ShellCheck
+        run: |
+          echo "Finding all shell scripts..."
+          files=$(find . -type f -name "*.sh")
+          if [ -z "$files" ]; then
+            echo "No shell scripts found."
+            exit 0
+          fi
+          echo "Running shellcheck..."
+          shellcheck --severity=error $files

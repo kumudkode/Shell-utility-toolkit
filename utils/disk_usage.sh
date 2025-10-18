@@ -1,7 +1,7 @@
 #!/bin/bash
-system_info_function() {
-    echo "=== System Info ==="
-    uname -a
+disk_usage_function() {
+    echo "=== Disk Usage ==="
+    df -h
     if [[ "$1" == "--test" ]] || [[ "$TEST_MODE" == true ]]; then
         echo "[TEST MODE] Skipping interactive commands"
     else
