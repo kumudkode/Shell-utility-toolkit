@@ -1,5 +1,6 @@
-name: Shell Script Lint Check
+name: Shell Toolkit CI/CD
 
+# Trigger on pushes and pull requests to main branch
 on:
   push:
     branches: [ main ]
@@ -7,24 +8,40 @@ on:
     branches: [ main ]
 
 jobs:
-  shellcheck:
+  lint_and_test:
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Checkout repo
-      - uses: actions/checkout@v4
+      # 1. Checkout the repo
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Step 2: Install ShellCheck via official package
+      # 2. Set up Bash environment (optional, default on Ubuntu)
+      - name: Setup Bash
+        run: echo "Bash is ready"
+
+      # 3. Install dependencies
       - name: Install ShellCheck
-        run: sudo snap install shellcheck --classic || sudo apt-get install -y shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
 
-      # Step 3: Run ShellCheck on all .sh files
-      - name: Run ShellCheck
+      # 4. Lint all shell scripts
+      - name: Lint Shell Scripts
         run: |
-          echo "Finding all shell scripts..."
-          files=$(find . -type f -name "*.sh")
-          if [ -z "$files" ]; then
-            echo "No shell scripts found."
-            exit 0
-          fi
-          echo "Running shellcheck..."
-          shellcheck --severity=error $files
+          echo "Running ShellCheck..."
+          shellcheck $(find . -type f -name "*.sh")
+
+      # 5. Make scripts executable
+      - name: Make scripts executable
+        run: chmod +x toolkit.sh utils/*.sh tests/*.sh
+
+      # 6. Run automated tests
+      - name: Run Shell Toolkit Tests
+        run: ./tests/test_toolkit.sh
+
+      # 7. Upload test logs as artifacts (optional)
+      - name: Upload Test Logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: shell-toolkit-test-logs
+          path: test_results.log
