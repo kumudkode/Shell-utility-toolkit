@@ -2,49 +2,33 @@ name: Shell Toolkit CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint_and_test:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout the repo
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Install dependencies
-      - name: Install ShellCheck
-        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Set up ShellCheck
+        run: sudo apt-get install -y shellcheck
 
-      # 3. Lint all shell scripts
-      - name: Lint Shell Scripts
+      - name: Run ShellCheck (Lint)
         run: |
-          echo "Running ShellCheck..."
-          shellcheck $(find . -type f -name "*.sh")
+          echo "Running ShellCheck on all shell scripts..."
+          find . -type f -name "*.sh" -exec shellcheck {} +
 
-      # 4. Make scripts executable
-      - name: Make scripts executable
-        run: chmod +x toolkit.sh utils/*.sh tests/*.sh
-
-      # 5. Run automated tests with failure detection
-      - name: Run Shell Toolkit Tests
+      - name: Run Tests
         run: |
           echo "Running Shell Toolkit Tests..."
+          chmod +x tests/test_toolkit.sh
           ./tests/test_toolkit.sh
-          STATUS=$?
-          if [ $STATUS -ne 0 ]; then
-            echo "::error ::Some scripts failed. See test_results.log for details."
-            exit 1
-          else
-            echo "All scripts passed successfully!"
-          fi
 
-      # 6. Upload test logs
-      - name: Upload Test Logs
-        if: always()
-        uses: actions/upload-artifact@v3
+      - name: Upload Logs
+        uses: actions/upload-artifact@v4
         with:
-          name: shell-toolkit-test-logs
+          name: test-results
           path: test_results.log
